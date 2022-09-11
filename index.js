@@ -1,7 +1,18 @@
-var express = require('express');
+import express from 'express';
+
+import { graphqlHTTP } from 'express-graphql';
+import { schema } from './graphql/schemas/schema.js';
+import { root } from './graphql/roots/root.js';
+
 var app = express();
 
-const port = 3001
+app.use('/graphql', graphqlHTTP({
+    schema: schema,
+    rootValue: root,
+    graphiql: true,
+  }));
+
+const port = 4000
 
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', function(req, res) {
