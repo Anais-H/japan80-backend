@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 import express from 'express';
 
 import { graphqlHTTP } from 'express-graphql';
@@ -12,7 +15,7 @@ app.use('/graphql', graphqlHTTP({
     graphiql: true,
   }));
 
-const port = 4000
+const port = process.env.PORT;
 
 // respond with "hello world" when a GET request is made to the homepage
 app.get('/', function(req, res) {
