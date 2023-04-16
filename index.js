@@ -3,9 +3,13 @@ require('dotenv').config();
 const express = require('express');
 var cors = require('cors');
 const bodyParser = require('body-parser');
-const { router: apiRouter } = require('./routes/api/index.js');
+const { router: apiRouterV1 } = require('./routes/api/v1/index.js');
+const { apiErrorHandler } = require('./middlewares/apiErrorHandler.js');
+const helmet = require('helmet');
 
 var app = express();
+
+app.use(helmet());
 
 app.use(cors({
     origin: ['http://localhost:3000', 'http://localhost:3001'],
@@ -16,9 +20,10 @@ app.use(bodyParser.json())
 
 const port = process.env.PORT;
 
-// respond with "hello world" when a GET request is made to the homepage
-app.use('/api', apiRouter);
-//app.use('/backend', backendRouter);
+app.use('/api/v1', apiRouterV1);
+
+// error handling at the very end
+app.use(apiErrorHandler);
 
 app.listen(port, () => {
     console.log(`Japan80 API listening on port http://localhost:${port}`);

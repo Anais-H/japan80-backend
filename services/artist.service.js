@@ -1,4 +1,5 @@
 const { pool } = require('../db/pool');
+const { ApiError } = require('../utils/ApiError');
 
 /**
  * Retourne les informations sur les artists compris entre offset et offset+limit
@@ -41,13 +42,19 @@ async function createArtist(artist) {
     RETURNING id`, [artist.name, artist.jp_name, artist.bithday, artist.birthplace_address_id, artist.active_since_year, artist.active_until_year,
         artist.artist_type_id, artist.short_description]);
 
-    return queryRes.rows[0];
+    return queryRes.rows[0].id;
+}
+
+async function updateArtistById(artist) {
+    await pool.query(`UPDATE artist SET name = $2, jp_name = $3, birthday = $4, birthplace_address_id = $5, active_since_year = $6, active_until_year = $7, artist_type_id = $8,
+    short_description = $9 WHERE id = $1`, [artist.id, artist.name, artist.jp_name, artist.bithday, artist.birthplace_address_id, artist.active_since_year, artist.active_until_year,
+        artist.artist_type_id, artist.short_description]);
+
+    return artist.id;
 }
 
 async function deleteArtistById(artistId) {
-    const queryRes = await pool.query(`DELETE FROM artist where id = $1 RETURNING id`, [artistId]);
-
-    return queryRes.rows[0];
+    await pool.query(`DELETE FROM artist where id = $1 RETURNING id`, [artistId]);
 }
 
 /**
@@ -64,5 +71,6 @@ module.exports = {
     getArtistById,
     getArtistsCount,
     createArtist,
+    updateArtistById,
     deleteArtistById
 }
