@@ -1,5 +1,5 @@
 const { ApiError } = require("../../utils/ApiError");
-const { getArtists, getArtistById, getArtistsCount, createArtist, updateArtistById, deleteArtistById } = require('../../services/artist.service');
+const { getArtists, getArtistById, getArtistsCount, createArtist, updateArtistById, deleteArtistById, getArtistTypes } = require('../../services/artist.service');
 
 const getArtistsCtrl = async (req, res, next) => {
     const artists = await getArtists(req.query.limit, req.query.offset)
@@ -69,11 +69,21 @@ const deleteArtistByIdCtrl = async (req, res, next) => {
     });
 };
 
+
+const getArtistTypesCtrl = async (req, res, next) => {
+    const artistTypes = await getArtistTypes();
+
+    res.send({
+        data: artistTypes
+    });
+}
+
 module.exports = {
     getArtistsCtrl,
     getArtistByIdCtrl,
     createArtistCtrl,
     updateArtistByIdCtrl,
     deleteArtistByIdCtrl,
-    getArtistsCountCtrl
+    getArtistsCountCtrl,
+    getArtistTypesCtrl
 }

@@ -9,8 +9,9 @@ const { ApiError } = require('../utils/ApiError');
  */
 async function getArtists(limit, offset) {
     const queryRes = await pool.query(`select 
-    artist.id, name, jp_name, birthday, active_since_year, active_until_year, 
+    artist.id, name, jp_name, artist_type_id, birthday, active_since_year, active_until_year, 
     city.city || ', ' || prefecture.prefecture || ', ' || country.country as birthplace,
+    birthplace_address_id,
     short_description
     from artist
     left join address on address.id = birthplace_address_id
@@ -24,8 +25,9 @@ async function getArtists(limit, offset) {
 
 async function getArtistById(artistId) {
     const queryRes = await pool.query(`select 
-    artist.id, name, jp_name, birthday, active_since_year, active_until_year, 
+    artist.id, name, jp_name, artist_type_id, birthday, active_since_year, active_until_year, 
     city.city || ', ' || prefecture.prefecture || ', ' || country.country as birthplace,
+    birthplace_address_id,
     short_description
     from artist
     left join address on address.id = birthplace_address_id
@@ -66,11 +68,18 @@ async function getArtistsCount() {
     return queryRes.rows[0];
 }
 
+
+async function getArtistTypes() {
+    const queryRes = await pool.query(`select id, type from artist_type`);
+    return queryRes.rows;
+}
+
 module.exports = {
     getArtists,
     getArtistById,
     getArtistsCount,
     createArtist,
     updateArtistById,
-    deleteArtistById
+    deleteArtistById,
+    getArtistTypes
 }

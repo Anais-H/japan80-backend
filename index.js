@@ -22,6 +22,10 @@ const port = process.env.PORT;
 
 app.use('/api/v1', apiRouterV1);
 
+app.get('/', function(req, res, next) {
+  res.send("Bienvenue sur l'API!");
+});
+
 // error handling at the very end
 app.use(apiErrorHandler);
 
